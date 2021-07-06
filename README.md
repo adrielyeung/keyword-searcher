@@ -41,4 +41,5 @@ Displays the character and word counts of the text.
 4. Load text from URL
 
 ## Credits
-To the Coder Foundry for their fantastic tutorial which this project is based on (https://www.youtube.com/watch?v=KEvLAe_2jXo).
+- The Coder Foundry for their fantastic tutorial which this project is based on (https://www.youtube.com/watch?v=KEvLAe_2jXo).
+- Logomakr for the free logo (https://logomakr.com/).
