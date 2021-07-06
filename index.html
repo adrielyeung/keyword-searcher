@@ -22,17 +22,18 @@
         <div class="row">
           <!-- Main content area (loads text) -->
           <div class="col-md-8">
-            <img src="KeywordSearcherLogo.png" alt="Keyword Searcher Logo" class="responsive">
+            <a href=""><img src="KeywordSearcherLogo.png" alt="Keyword Searcher Logo" class="responsive"></a>
             <!-- Card is a class that may contain header, body and footer -->
             <div class="card mb-4">
               <h2 class="card-header" id="fileName">Welcome to Keyword Searcher!</h2>
               <div class="card-body">
                 <div class="displayBox scroll-box" id="fileContent">
-                  Select a sample text, insert your text or type in a URL on the right, to start analysing it.
+                  Select a sample text or insert your text, to start analysing it.
                 </div>
               </div>
               <div class="card-footer text-muted">
-                <a href="https://github.com/adrielyeung" target="_blank"><i class="fab fa-github-square" aria-hidden="true" style="color:black"></i><span>View my GitHub profile</span></a>
+                <a href="https://github.com/adrielyeung" target="_blank"><i class="fab fa-github-square" aria-hidden="true" style="color:black"></i><span class="mx-2">View my GitHub profile</span></a>| 
+                <a href="https://github.com/adrielyeung/keyword-searcher" target="_blank"><i class="fab fa-github-square" aria-hidden="true" style="color:black"></i><span class="mx-2">View source code on GitHub</span></a>
               </div>
             </div>
           </div>
@@ -50,10 +51,10 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="input-group">
-                        <span class="input-group-btn">
+                        <span class="input-group-btn mx-1 my-1">
                           <button class="btn btn-secondary" type="button" onclick="performHighlight()">Search</button>
                         </span>
-                        <span class="input-group-btn">
+                        <span class="input-group-btn mx-1 my-1">
                           <button class="btn btn-secondary" type="button" onclick="resetHighlight()">Reset</button>
                         </span>
                       </div>
@@ -84,19 +85,17 @@
                 <h5 class="card-header">Insert your own text</h5>
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 my-1">
                       <input type="text" class="form-control" id="userTitle" placeholder="Insert a title here (optional)...">
                     </div>
                   </div>
-                  <br>
                   <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 my-1">
                       <textarea class="userinput" id="userContent" placeholder="Insert your text here..."></textarea>
                     </div>
                   </div>
-                  <br>
                   <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 my-1">
                       <span class="input-group-btn">
                         <button class="btn btn-secondary" type="button" onclick="loadTextFromInput()">Load</button>
                       </span>
