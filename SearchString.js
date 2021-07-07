@@ -60,10 +60,8 @@ function loadText(filename, displayName) {
             }
         };
 
-        if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
-            document.getElementById("fileContent").innerHTML = "Text not found";
-        }
-    }, 1000);    
+        setTimeout(setTextNotFound(), 1000);
+    }, 1000);   
 }
 
 // Load text from user input
@@ -117,9 +115,7 @@ function loadTextFromInput() {
             // Scroll to top
             document.getElementById("fileContent").scrollTop = 0;
     
-            if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
-                document.getElementById("fileContent").innerHTML = "Text not found";
-            }
+            setTimeout(setTextNotFound(), 1000);
         }, 1000);
     }
 }
@@ -133,6 +129,12 @@ function resetUI(displayName) {
     document.getElementById("leastUsed").innerHTML = "";
     document.getElementById("docLength").innerHTML = "";
     document.getElementById("wordCount").innerHTML = "";
+}
+
+function setTextNotFound() {
+    if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
+        document.getElementById("fileContent").innerHTML = "Text not found";
+    }
 }
 
 // Get the stats for the text
