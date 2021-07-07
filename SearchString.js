@@ -118,7 +118,7 @@ function loadTextFromInput() {
             if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
                 document.getElementById("fileContent").innerHTML = "Text not found";
             }
-        }, 100);
+        }, 1000);
     }
 }
 
