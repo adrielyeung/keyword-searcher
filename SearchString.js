@@ -24,44 +24,46 @@ function loadText(filename, displayName) {
         }
     };
 
-    // Load text
-    let currentText = "";
-    let url = "text/" + filename;
+    setTimeout(function () {
+        // Load text
+        let currentText = "";
+        let url = "text/" + filename;
 
-    // Create a HTTP server request to load text
-    // When text are uploaded, it is hosted on the server
-    var xhr = new XMLHttpRequest();
-    // Initialises the connection, asynchronous request meaning screen is not frozen while execution
-    xhr.open("GET", url, true);
-    xhr.send();
+        // Create a HTTP server request to load text
+        // When text are uploaded, it is hosted on the server
+        var xhr = new XMLHttpRequest();
+        // Initialises the connection, asynchronous request meaning screen is not frozen while execution
+        xhr.open("GET", url, true);
+        xhr.send();
 
-    // On ready state change event, calling anonymous function every time the request state changes
-    xhr.onreadystatechange = function () {
-        // Ready state 0 = unsent, 1 = opened, 2 = header received, 3 = loading, 4 = done
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            // Load response text as current text
-            // FORMATTING: Remove line breaks and carriage returns and replace with HTML <br> tag
-            // ?: defines a non-capturing group, i.e. the LB and CR chars are not separately returned in a list
-            currentText = xhr.responseText;
+        // On ready state change event, calling anonymous function every time the request state changes
+        xhr.onreadystatechange = function () {
+            // Ready state 0 = unsent, 1 = opened, 2 = header received, 3 = loading, 4 = done
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Load response text as current text
+                // FORMATTING: Remove line breaks and carriage returns and replace with HTML <br> tag
+                // ?: defines a non-capturing group, i.e. the LB and CR chars are not separately returned in a list
+                currentText = xhr.responseText;
 
-            if (stopWordArray.length === 0) {
-                alert("Stop word list cannot be loaded. The most used words list will be affected.");
+                if (stopWordArray.length === 0) {
+                    alert("Stop word list cannot be loaded. The most used words list will be affected.");
+                }
+
+                getDocStats(currentText, stopWordArray);
+
+                currentText = currentText.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
+                document.getElementById("fileContent").innerHTML = currentText;
+
+                // Scroll to top
+                document.getElementById("fileContent").scrollTop = 0;
             }
+        };
 
-            getDocStats(currentText, stopWordArray);
-
-            currentText = currentText.replace(/(?:\r\n|\r|\n)/g, '<br>');
-
-            document.getElementById("fileContent").innerHTML = currentText;
-
-            // Scroll to top
-            document.getElementById("fileContent").scrollTop = 0;
+        if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
+            document.getElementById("fileContent").innerHTML = "Text not found";
         }
-    };
-
-    if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
-        document.getElementById("fileContent").innerHTML = "Text not found";
-    }
+    }, 2000);    
 }
 
 // Load text from user input
@@ -118,7 +120,7 @@ function loadTextFromInput() {
             if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
                 document.getElementById("fileContent").innerHTML = "Text not found";
             }
-        }, 1000);
+        }, 2000);
     }
 }
 
