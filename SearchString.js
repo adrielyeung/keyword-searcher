@@ -63,7 +63,7 @@ function loadText(filename, displayName) {
         if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
             document.getElementById("fileContent").innerHTML = "Text not found";
         }
-    }, 100);    
+    }, 500);    
 }
 
 // Load text from user input
@@ -120,7 +120,7 @@ function loadTextFromInput() {
             if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
                 document.getElementById("fileContent").innerHTML = "Text not found";
             }
-        }, 100);
+        }, 500);
     }
 }
 
