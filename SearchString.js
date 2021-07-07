@@ -8,7 +8,7 @@ function loadText(filename, displayName) {
     var xhrStopWord = new XMLHttpRequest();
 
     // Load stop word list from config
-    var stopWordArray = [];
+    let stopWordArray = [];
     let stopWordUrl = "config/stopwords.txt";
 
     // Initialises the connection, asynchronous request meaning screen is not frozen while execution
@@ -63,7 +63,7 @@ function loadText(filename, displayName) {
         if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
             document.getElementById("fileContent").innerHTML = "Text not found";
         }
-    }, 500);    
+    }, 1000);    
 }
 
 // Load text from user input
@@ -81,7 +81,7 @@ function loadTextFromInput() {
         var xhrStopWord = new XMLHttpRequest();
     
         // Load stop word list from config
-        var stopWordArray = [];
+        let stopWordArray = [];
         let stopWordUrl = "config/stopwords.txt";
     
         // Initialises the connection, asynchronous request meaning screen is not frozen while execution
@@ -120,7 +120,7 @@ function loadTextFromInput() {
             if (document.getElementById("fileContent").innerHTML === "Loading..." || document.getElementById("fileContent").innerHTML.length === 0) {
                 document.getElementById("fileContent").innerHTML = "Text not found";
             }
-        }, 500);
+        }, 1000);
     }
 }
 
