@@ -22,18 +22,91 @@
         <div class="row">
           <!-- Main content area (loads text) -->
           <div class="col-md-8">
-            <a href=""><img src="KeywordSearcherLogo.png" alt="Keyword Searcher Logo" class="responsive"></a>
+            <a href=""><img src="KeywordSearcherLogo.png" title="Keyword Searcher" alt="Keyword Searcher" class="responsive" width="25%" height="25%"></a>
             <!-- Card is a class that may contain header, body and footer -->
             <div class="card mb-4">
               <h2 class="card-header" id="fileName">Welcome to Keyword Searcher!</h2>
               <div class="card-body">
                 <div class="displayBox scroll-box" id="fileContent">
-                  Select a sample text or insert your text, to start analysing it.
+                  Select a sample text, insert your text or type a URL below, to start analysing it.
                 </div>
               </div>
               <div class="card-footer text-muted">
                 <a href="https://github.com/adrielyeung" target="_blank"><i class="fab fa-github-square" aria-hidden="true" style="color:black"></i><span class="mx-2">View my GitHub profile</span></a>| 
                 <a href="https://github.com/adrielyeung/keyword-searcher" target="_blank"><i class="fab fa-github-square" aria-hidden="true" style="color:black"></i><span class="mx-2">View source code on GitHub</span></a>
+              </div>
+            </div>
+            <!-- Select sample text -->
+            <div class="card my-4">
+              <h5 class="card-header">Select a sample text</h5>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- ul - Unordered list-->
+                    <ul class="list-unstyled mb-0">
+                      <li><a href="#" onclick="loadText('HarryPotter.txt', 'Harry Potter')">Harry Potter</a></li>
+                      <li><a href="#" onclick="loadText('AliceInWonderland.txt', 'Alice in the Wonderland')">Alice in the Wonderland</a></li>
+                      <li><a href="#" onclick="loadText('LordOfTheRings.txt', 'Lord of the Rings')">Lord of the Rings</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Insert text widget -->
+            <div class="card my-4">
+              <h5 class="card-header">Insert your own text</h5>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    <input type="text" class="form-control" id="userTitle" placeholder="Insert a title here (optional)...">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    <textarea class="userinput" id="userContent" placeholder="Insert your text here..."></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    <span class="input-group-btn">
+                      <button class="btn btn-secondary" type="button" onclick="loadTextFromInput()">Load</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Type URL widget -->
+            <div class="card my-4">
+              <h5 class="card-header">Type a website URL to load its text</h5>
+              <h6 class="card-header">This is an advanced feature. You will need to enable cross origin request (CORS) through installing a CORS changer in your browser
+                to allow sending request to an external website.</h6>
+              <h6 class="card-header text-danger">If you do not understand the above, you are recommended to copy and paste text from the 
+                external website into the above box instead. We do not take any responsibility for any malicious attacks from external sites.</h6>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    Please confirm you understand that you are using this feature at your own risk.
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    <span class="input-group-btn">
+                      <button class="btn btn-secondary" type="button" onclick="unlockHtml()">I understand, unlock feature</button>
+                    </span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    <input type="text" class="form-control" id="userUrl" placeholder="Type a URL here..." disabled>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    <span class="input-group-btn">
+                      <button class="btn btn-secondary" id="userUrlButton" type="button" onclick="loadTextFromHtml()" disabled>Load</button>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -62,45 +135,6 @@
                   </div>
                 </div>
                 <div class="card-footer" id="searchStat">
-                </div>
-              </div>
-              <!-- Select sample text -->
-              <div class="card my-4">
-                <h5 class="card-header">Select a sample text</h5>
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <!-- ul - Unordered list-->
-                      <ul class="list-unstyled mb-0">
-                        <li><a href="#" onclick="loadText('HarryPotter.txt', 'Harry Potter')">Harry Potter</a></li>
-                        <li><a href="#" onclick="loadText('AliceInWonderland.txt', 'Alice in the Wonderland')">Alice in the Wonderland</a></li>
-                        <li><a href="#" onclick="loadText('LordOfTheRings.txt', 'Lord of the Rings')">Lord of the Rings</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Type URL to load text widget -->
-              <div class="card my-4">
-                <h5 class="card-header">Insert your own text</h5>
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-md-12 my-1">
-                      <input type="text" class="form-control" id="userTitle" placeholder="Insert a title here (optional)...">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12 my-1">
-                      <textarea class="userinput" id="userContent" placeholder="Insert your text here..."></textarea>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12 my-1">
-                      <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="button" onclick="loadTextFromInput()">Load</button>
-                      </span>
-                    </div>
-                  </div>
                 </div>
               </div>
               <!-- Most used words widget-->
@@ -155,7 +189,7 @@
       </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
