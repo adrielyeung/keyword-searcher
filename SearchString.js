@@ -8,7 +8,7 @@ function loadText(filename, displayName) {
     var stopWordArray = [];
     var stopWordUrl = "config/stopwords.txt";
 
-    resetUI(displayName);
+    resetUI("Sample text : " + displayName);
 
     // Initialises the connection, asynchronous request
     // meaning screen is not frozen while execution
@@ -28,7 +28,6 @@ function loadText(filename, displayName) {
 
     setTimeout(function () {
         // Load text
-        var currentText = "";
         var url = "text/" + filename;
 
         // Create a HTTP server request to load text
@@ -47,24 +46,10 @@ function loadText(filename, displayName) {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 // Load response text as current text
                 // FORMATTING: Remove line breaks and carriage returns
-                // and replace with HTML <br> tag
+                // and replace with HTML <br/> tag
                 // ?: defines a non-capturing group, i.e. the LB and CR chars
                 // are not separately returned in a list
-                currentText = xhr.responseText;
-
-                if (stopWordArray.length === 0) {
-                    alert("Stop word list cannot be loaded. " +
-                          "The most used words list will be affected.");
-                }
-
-                getDocStats(currentText, stopWordArray);
-
-                currentText = currentText.replace(/(?:\r\n|\r|\n)/g, "<br>");
-
-                document.getElementById("fileContent").innerHTML = currentText;
-
-                // Scroll to top
-                document.getElementById("fileContent").scrollTop = 0;
+                setFileContent(xhr.responseText, stopWordArray);
             }
         };
 
@@ -74,12 +59,7 @@ function loadText(filename, displayName) {
 
 // Load text from user input
 function loadTextFromInput() {
-    // Load stop word list from config
-    // Create a HTTP server request to load text
-    // When text are uploaded, it is hosted on the server
     var xhrStopWord = new XMLHttpRequest();
-
-    // Load stop word list from config
     var stopWordArray = [];
     var stopWordUrl = "config/stopwords.txt";
 
@@ -87,51 +67,82 @@ function loadTextFromInput() {
         if (document.getElementById("userTitle").value.trim().length === 0) {
             resetUI("Your text");
         } else {
-            resetUI(document.getElementById("userTitle").value);
+            resetUI("Your text : " + document.getElementById("userTitle").value);
         }
 
-        // Initialises the connection, asynchronous request
-        // meaning screen is not frozen while execution
         xhrStopWord.open("GET", stopWordUrl, true);
         xhrStopWord.send();
 
-        // On ready state change event, calling anonymous function
-        // every time the request state changes
         xhrStopWord.onreadystatechange = function () {
-            // Ready state 0 = unsent, 1 = opened,
-            // 2 = header received, 3 = loading, 4 = done
             if (xhrStopWord.readyState === 4 && xhrStopWord.status === 200) {
-                // Load response text as current text
                 stopWordArray = xhrStopWord.responseText.split(/\s+/);
             }
         };
 
-        // Timeout - wait for stop word to populate before loading text
         setTimeout(function () {
             // Load text from textarea
-            // FORMATTING: Remove line breaks and carriage returns
-            // and replace with HTML <br> tag
-            // ?: defines a non-capturing group, i.e. the LB and CR chars
-            // are not separately returned in a list
-            var currentText = document.getElementById("userContent").value;
-
-            if (stopWordArray.length === 0) {
-                alert("Stop word list cannot be loaded. " +
-                "The most used words list will be affected.");
-            }
-
-            getDocStats(currentText, stopWordArray);
-
-            currentText = currentText.replace(/(?:\r\n|\r|\n)/g, "<br>");
-
-            document.getElementById("fileContent").innerHTML = currentText;
-
-            // Scroll to top
-            document.getElementById("fileContent").scrollTop = 0;
-
-            setTimeout(setTextNotFound(), 1000);
+            setFileContent(document.getElementById("userContent").value, stopWordArray);
         }, 1000);
     }
+}
+
+function loadTextFromHtml() {
+    var userUrl = document.getElementById("userUrl").value;
+    var allDivs;
+    var htmlText = "";
+    var titleText = "Site content";
+
+    var xhrStopWord = new XMLHttpRequest();
+    var stopWordArray = [];
+    var stopWordUrl = "config/stopwords.txt";
+
+    if (typeof userUrl !== "undefined" && userUrl.trim().length > 0) {
+        xhrStopWord.open("GET", stopWordUrl, true);
+        xhrStopWord.send();
+
+        xhrStopWord.onreadystatechange = function () {
+            if (xhrStopWord.readyState === 4 && xhrStopWord.status === 200) {
+                stopWordArray = xhrStopWord.responseText.split(/\s+/);
+            }
+        };
+
+        setTimeout(function () {
+            // Use jQuery to extract site content
+            $(document).ready(function () {
+                $("#fileContent").load(userUrl, function () {
+                    // After loading complete, extract text within all divs in fileContent
+                    allDivs = document.getElementById("fileContent").getElementsByTagName('div');
+                    titleText += " : " + document.getElementById("fileContent").getElementsByTagName('title')[0].innerHTML;
+                    
+                    for (var i = 0; i < allDivs.length; i++) {
+                        htmlText += allDivs[i].innerText;
+                    }
+                    
+                    resetUI(titleText);
+
+                    setFileContent(htmlText, stopWordArray);
+                });
+            });
+        }, 1000);
+    }
+}
+
+function setFileContent(currentText, stopWordArray) {
+    if (stopWordArray.length === 0) {
+        alert("Stop word list cannot be loaded. " +
+        "The most used words list will be affected.");
+    }
+
+    getDocStats(currentText, stopWordArray);
+
+    currentText = currentText.replace(/(?:\r\n|\r|\n)/g, "<br/>");
+
+    document.getElementById("fileContent").innerHTML = currentText;
+
+    // Scroll to top
+    document.getElementById("fileContent").scrollTop = 0;
+
+    setTimeout(setTextNotFound(), 1000);
 }
 
 function resetUI(displayName) {
@@ -278,7 +289,7 @@ function performHighlight() {
         // Count number of highlighted
         count = document.querySelectorAll("mark").length;
         document.getElementById("searchStat").innerHTML = "Search for : "
-            + keyword + "<br>Found matches : " + count + " time(s)";
+            + keyword + "<br/>Found matches : " + count + " time(s)";
 
         // Scroll to first match if there are matches
         if (count > 0) {
@@ -300,4 +311,10 @@ function resetHighlight() {
     );
 
     document.getElementById("searchStat").innerHTML = "";
+}
+
+// Unlock load text from HTML
+function unlockHtml() {
+    document.getElementById("userUrl").disabled = false;
+    document.getElementById("userUrlButton").disabled = false;
 }
