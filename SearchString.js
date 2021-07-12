@@ -86,6 +86,7 @@ function loadTextFromInput() {
     }
 }
 
+// Load text from URL
 function loadTextFromHtml() {
     var userUrl = document.getElementById("userUrl").value;
     var allDivs;
@@ -111,8 +112,10 @@ function loadTextFromHtml() {
             $(document).ready(function () {
                 $("#fileContent").load(userUrl, function () {
                     // After loading complete, extract text within all divs in fileContent
-                    allDivs = document.getElementById("fileContent").getElementsByTagName('div');
-                    titleText += " : " + document.getElementById("fileContent").getElementsByTagName('title')[0].innerHTML;
+                    allDivs = document.getElementById("fileContent")
+                        .getElementsByTagName('div');
+                    titleText += " : " + document.getElementById("fileContent")
+                        .getElementsByTagName('title')[0].innerHTML;
                     
                     for (var i = 0; i < allDivs.length; i++) {
                         htmlText += allDivs[i].innerText;
@@ -123,6 +126,55 @@ function loadTextFromHtml() {
                     setFileContent(htmlText, stopWordArray);
                 });
             });
+        }, 1000);
+    }
+}
+
+// Load text from uploaded file
+function loadTextFromFile() {
+    // A file list is used, but the input element does not allow multiple inputs,
+    // so max 1 file in this list
+    var fileList = document.getElementById("userFile").files;
+    var file;
+    var filePath = document.getElementById("userFile").value;
+    var filePathSplit = filePath.split("\\");
+    var fileReader = new FileReader();
+    var allowedExtensions = /(\.txt)$/i;
+
+    var xhrStopWord = new XMLHttpRequest();
+    var stopWordArray = [];
+    var stopWordUrl = "config/stopwords.txt";
+
+    if (typeof fileList !== "undefined" && fileList.length > 0) {
+        file = fileList[0];
+        if (!allowedExtensions.exec(filePath)) {
+            alert("Only .txt files are allowed.");
+            document.getElementById("userFile").value = "";
+            return;
+        }
+        fileReader.onload = function(e) {
+            $('#fileContent').html(e.target.result);
+        };
+    
+        fileReader.readAsText(file);
+
+        if (document.getElementById("userFileTitle").value.trim().length === 0) {
+            resetUI("Upload file : " + filePathSplit[filePathSplit.length - 1]);
+        } else {
+            resetUI("Upload file : " + document.getElementById("userFileTitle").value);
+        }
+
+        xhrStopWord.open("GET", stopWordUrl, true);
+        xhrStopWord.send();
+
+        xhrStopWord.onreadystatechange = function () {
+            if (xhrStopWord.readyState === 4 && xhrStopWord.status === 200) {
+                stopWordArray = xhrStopWord.responseText.split(/\s+/);
+            }
+        };
+
+        setTimeout(function () {
+            setFileContent(document.getElementById("fileContent").innerHTML, stopWordArray);
         }, 1000);
     }
 }
