@@ -75,6 +75,29 @@
                 </div>
               </div>
             </div>
+            <!-- File upload widget -->
+            <div class="card my-4">
+              <h5 class="card-header">Upload your file (only text files supported)</h5>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    <input type="text" class="form-control" id="userFileTitle" placeholder="Insert a title here (optional)...">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    <input type="file" id="userFile" name="filename" accept=".txt">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 my-1">
+                    <span class="input-group-btn">
+                      <button class="btn btn-secondary" type="button" onclick="loadTextFromFile()">Load</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <!-- Type URL widget -->
             <div class="card my-4">
               <h5 class="card-header">Type a website URL to load its text</h5>
