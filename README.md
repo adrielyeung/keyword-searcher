@@ -2,7 +2,13 @@
 A JavaScript front end app to enable analysis of keywords in text.
 Built with HTML (Bootstrap), CSS, and functionality provided by Javascript.
 
-Demo site hosted on my personal site: https://keywordsearcher.adrieltheexplorer.com
+Demo site hosted on my personal site: https://keywordsearcher.adrieltheexplorer.com .
+
+## What's new - 13/7/2021
+1. Search and Replace
+2. Save to .txt file
+3. Load from .txt file
+4. Load from URL (require cross origin request (CORS) permission)
 
 ## How to use
 1. Clone the repository into a local directory.
@@ -15,9 +21,16 @@ The front end, ```index.html```, is divided into several sections:
 
 1. Title area - Title of the text
 2. Content area - Main content
-3. Search area - Custom keyword search in main content. Highlights keywords found and displays number of keywords found.
-4. Sample area - Select any example text for quick study of functionalities.
-5. Insert text area - Custom text analysis as provided by user.
+3. Search area - Custom keyword search in Content area. Highlights keywords found and displays number of keywords found. Allows for replacement of all found keywords.
+4. Save file area - Save all text in Content area (including replaced keywords) as .txt file.
+5. Analysis area - Analysis of most used, least used words, character and word counts (see below).
+
+<img src="https://github.com/adrielyeung/keyword-searcher/blob/main/images/KeywordSearcher_Bottom_Img.PNG" alt="Keyword Searcher Front End Bottom" width="100%" height="100%">
+
+6. Sample area - Select any example text for quick study of functionalities.
+7. Insert text area - Custom text analysis as input by user.
+8. Upload file area - Custom .txt file analysis as uploaded by user.
+9. Load URL area - Website content analysis (advanced - need to enable cross origin request (CORS)). For users who do not understand this concept, recommended to copy and paste text from the external website into the "Insert text area" instead.
 
 Functionality is provided by ```SearchString.js``` file.
 
@@ -32,13 +45,9 @@ You may use the search box to perform searches for these words.
 ### Text analysis stats
 Displays the character and word counts of the text.
 
-<img src="https://github.com/adrielyeung/keyword-searcher/blob/main/images/KeywordSearcher_Bottom_Img.PNG" alt="Keyword Searcher Front End Bottom" width="100%" height="100%">
-
 ## Future developments
 1. Whole word / partial word searching option
 2. Case sensitive search
-3. Search and replace
-4. Load text from URL
 
 ## Credits
 - The Coder Foundry for their fantastic tutorial which this project is based on (https://www.youtube.com/watch?v=KEvLAe_2jXo).
