@@ -1,4 +1,4 @@
-// Load a text from disk
+// Load sample text
 function loadText(filename, displayName) {
     // Load stop word list from config
     // Create a HTTP server request to load text
@@ -45,10 +45,6 @@ function loadText(filename, displayName) {
             // 2 = header received, 3 = loading, 4 = done
             if (xhr.readyState === 4 && xhr.status === 200) {
                 // Load response text as current text
-                // FORMATTING: Remove line breaks and carriage returns
-                // and replace with HTML <br/> tag
-                // ?: defines a non-capturing group, i.e. the LB and CR chars
-                // are not separately returned in a list
                 setFileContent(xhr.responseText, stopWordArray);
             }
         };
@@ -159,9 +155,13 @@ function loadTextFromFile() {
         fileReader.readAsText(file);
 
         if (document.getElementById("userFileTitle").value.trim().length === 0) {
-            resetUI("Upload file : " + filePathSplit[filePathSplit.length - 1]);
+            // If user did not provide title,
+            // use file name (the last part of file path splitted)
+            resetUI("Upload file : " +
+                filePathSplit[filePathSplit.length - 1]);
         } else {
-            resetUI("Upload file : " + document.getElementById("userFileTitle").value);
+            resetUI("Upload file : " +
+                document.getElementById("userFileTitle").value);
         }
 
         xhrStopWord.open("GET", stopWordUrl, true);
@@ -174,19 +174,19 @@ function loadTextFromFile() {
         };
 
         setTimeout(function () {
-            setFileContent(document.getElementById("fileContent").innerHTML, stopWordArray);
+            setFileContent(document.getElementById("fileContent").innerHTML,
+                stopWordArray);
         }, 1000);
     }
 }
 
 function setFileContent(currentText, stopWordArray) {
-    if (stopWordArray.length === 0) {
-        alert("Stop word list cannot be loaded. " +
-        "The most used words list will be affected.");
-    }
-
     getDocStats(currentText, stopWordArray);
 
+    // FORMATTING: Remove line breaks and carriage returns
+    // and replace with HTML <br/> tag
+    // ?: defines a non-capturing group, i.e. the LB and CR chars
+    // are not separately returned in a list
     currentText = currentText.replace(/(?:\r\n|\r|\n)/g, "<br/>");
 
     document.getElementById("fileContent").innerHTML = currentText;
@@ -195,17 +195,36 @@ function setFileContent(currentText, stopWordArray) {
     document.getElementById("fileContent").scrollTop = 0;
 
     setTimeout(setTextNotFound(), 1000);
+
+    enableSearchAndSave();
+}
+
+// Enable search, save file functions
+function enableSearchAndSave() {
+    document.getElementById("keyword").disabled = false;
+    document.getElementById("performHighlight").disabled = false;
+    document.getElementById("resetHighlight").disabled = false;
+    document.getElementById("fileNameSave").disabled = false;
+    document.getElementById("saveFile").disabled = false;
 }
 
 function resetUI(displayName) {
+    resetSearchStat();
     document.getElementById("fileName").innerHTML = displayName;
-    document.getElementById("searchStat").innerHTML = "";
     document.getElementById("keyword").value = "";
     document.getElementById("fileContent").innerHTML = "Loading...";
     document.getElementById("mostUsed").innerHTML = "";
     document.getElementById("leastUsed").innerHTML = "";
     document.getElementById("docLength").innerHTML = "";
     document.getElementById("wordCount").innerHTML = "";
+}
+
+function resetSearchStat() {
+    document.getElementById("searchStatSearch").innerHTML =
+        "<strong id=\"searchStatSearchWord\"></strong>";
+    document.getElementById("searchStatFound").innerHTML = "";
+    document.getElementById("searchStatReplace").innerHTML =
+        "<strong id=\"searchStatReplaceWord\"></strong>";
 }
 
 function setTextNotFound() {
@@ -217,6 +236,11 @@ function setTextNotFound() {
 
 // Get the stats for the text
 function getDocStats(fileContent, stopWordArray) {
+    if (stopWordArray.length === 0) {
+        alert("Stop word list cannot be loaded. " +
+        "The most used words list will be affected.");
+    }
+
     var docLength = document.getElementById("docLength");
     var wordCount = document.getElementById("wordCount");
 
@@ -257,10 +281,10 @@ function getDocStats(fileContent, stopWordArray) {
     ULTemplate(least5Words, document.getElementById("leastUsed"));
 
     // Get document stats
-    docLength.innerText = "Document Length : " + textWithoutLineBreaks.length
-                        + " character(s)";
+    docLength.innerText = "Document Length : "
+        + textWithoutLineBreaks.length + " character(s)";
     wordCount.innerText = "Word Count : " + wordArray.length
-                        + " word(s)";
+        + " word(s)";
 }
 
 function ULTemplate(items, element) {
@@ -335,18 +359,22 @@ function performHighlight() {
         // Highlight the elements
         newContent = bookContent.replace(re, replaceText);
 
-
         // Display new content
         display.innerHTML = newContent;
         // Count number of highlighted
         count = document.querySelectorAll("mark").length;
-        document.getElementById("searchStat").innerHTML = "Search for : "
-            + keyword + "<br/>Found matches : " + count + " time(s)";
+        document.getElementById("searchStatSearch").innerHTML = "Search for : " + 
+            "<strong id=\"searchStatSearchWord\">" + keyword + "</strong>";
+        document.getElementById("searchStatFound").innerHTML = "Found matches : "
+            + count + " time(s)";
 
-        // Scroll to first match if there are matches
+        // Scroll to first match, and enable replace if there are matches
         if (count > 0) {
             document.getElementById("markme").scrollIntoView();
+            toggleReplaceDisabled(false);
         }
+
+        document.getElementById("resetReplace").disabled = true;
     }
 }
 
@@ -362,7 +390,115 @@ function resetHighlight() {
         span.outerHTML = span.innerHTML
     );
 
-    document.getElementById("searchStat").innerHTML = "";
+    resetSearchStat();
+    toggleReplaceDisabled(true);
+    document.getElementById("resetReplace").disabled = true;
+}
+
+function toggleReplaceDisabled(disabledBool) {
+    document.getElementById("replaceWord").disabled = disabledBool;
+    document.getElementById("replaceHighlight").disabled = disabledBool;
+}
+
+// Replace selected text with replaceWord
+function replaceHighlight() {
+    var replaceWord = document.getElementById("replaceWord").value;
+    var spans = document.querySelectorAll("mark");
+
+    var xhrStopWord = new XMLHttpRequest();
+    var stopWordArray = [];
+    var stopWordUrl = "config/stopwords.txt";
+
+    // Replace all highlighted with replaceWord
+    spans.forEach((span) =>
+        span.innerHTML = replaceWord
+    );
+
+    document.getElementById("searchStatReplace").innerHTML =
+        "Replaced with : <strong id=\"searchStatReplaceWord\">"
+        + replaceWord + "</strong>";
+
+    toggleReplaceDisabled(true);
+    document.getElementById("resetReplace").disabled = false;
+
+    // Reload doc stats after replacement
+    xhrStopWord.open("GET", stopWordUrl, true);
+    xhrStopWord.send();
+
+    xhrStopWord.onreadystatechange = function () {
+        if (xhrStopWord.readyState === 4 && xhrStopWord.status === 200) {
+            stopWordArray = xhrStopWord.responseText.split(/\s+/);
+            getDocStats(stripTags(document.getElementById("fileContent").innerHTML),
+                stopWordArray);
+        }
+    };
+}
+
+// Reset replace text
+function resetReplace() {
+    var searchWord = document.getElementById("searchStatSearchWord").innerHTML;
+    var spans = document.querySelectorAll("mark");
+
+    var xhrStopWord = new XMLHttpRequest();
+    var stopWordArray = [];
+    var stopWordUrl = "config/stopwords.txt";
+
+    // Replace all highlighted with searchWord
+    spans.forEach((span) =>
+        span.innerHTML = searchWord
+    );
+
+    document.getElementById("searchStatReplace").innerHTML =
+        "<strong id=\"searchStatReplaceWord\"></strong>";
+    
+    toggleReplaceDisabled(false);
+    document.getElementById("resetReplace").disabled = true;
+
+    // Reload doc stats after replacement
+    xhrStopWord.open("GET", stopWordUrl, true);
+    xhrStopWord.send();
+
+    xhrStopWord.onreadystatechange = function () {
+        if (xhrStopWord.readyState === 4 && xhrStopWord.status === 200) {
+            stopWordArray = xhrStopWord.responseText.split(/\s+/);
+            getDocStats(stripTags(document.getElementById("fileContent").innerHTML),
+                stopWordArray);
+        }
+    };
+}
+
+// Save as file
+function saveFile() {
+    var text = stripTags(document.getElementById("fileContent").innerHTML.trim());
+    var textBlob = new Blob([text], {
+        type: 'text/plain'
+    });
+    var textUrl = window.URL.createObjectURL(textBlob);
+    var fileNameSave = document.getElementById("fileNameSave").value;
+
+    var downloadLink = document.createElement("a");
+    downloadLink.download = fileNameSave;
+    downloadLink.innerHTML = "Download File";
+    downloadLink.href = textUrl;
+    downloadLink.onclick = destroyClickedElement;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+}
+
+function stripTags(text) {
+    // Replace line breaks as newline
+    text = text.replace(/<br\s*[\/]?>/g, "\n");
+
+    // Strip all other inner tags
+    text = text.replace(
+        /<[\/]?\w+\s*(\w+\s*=\s*[\'\"\w]+\s*)*>|<\w+\s*(\w+\s*=\s*[\'\"\w]+\s*)*[\/]?>/g,
+        "");
+    return text;
+}
+
+function destroyClickedElement(event) {
+    document.body.removeChild(event.target);
 }
 
 // Unlock load text from HTML

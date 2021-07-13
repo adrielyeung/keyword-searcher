@@ -28,7 +28,7 @@
               <h2 class="card-header" id="fileName">Welcome to Keyword Searcher!</h2>
               <div class="card-body">
                 <div class="displayBox scroll-box" id="fileContent">
-                  Select a sample text, insert your text or type a URL below, to start analysing it.
+                  Select a sample text, insert your text, upload your file, or type a URL below, to start analysing it.
                 </div>
               </div>
               <div class="card-footer text-muted">
@@ -104,7 +104,7 @@
               <h6 class="card-header">This is an advanced feature. You will need to enable cross origin request (CORS) through installing a CORS changer in your browser
                 to allow sending request to an external website.</h6>
               <h6 class="card-header text-danger">If you do not understand the above, you are recommended to copy and paste text from the 
-                external website into the above box instead. We do not take any responsibility for any malicious attacks from external sites.</h6>
+                external website into the "Insert your own text" box instead. We do not take any responsibility for any malicious attacks from external sites.</h6>
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-12 my-1">
@@ -137,27 +137,67 @@
           <div class="col-md-4">
               <!-- Search widget -->
               <div class="card my-4">
-                <h5 class="card-header">Search</h5>
+                <h5 class="card-header">Search and Replace</h5>
                 <div class="card-body">
                   <div class="row">
                     <div class="col-md-12">
-                      <input type="text" class="form-control" id="keyword" placeholder="Search for...">
+                      <input type="text" class="form-control" id="keyword" placeholder="Search for..." disabled>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
                       <div class="input-group">
                         <span class="input-group-btn mx-1 my-1">
-                          <button class="btn btn-secondary" type="button" onclick="performHighlight()">Search</button>
+                          <button class="btn btn-secondary" type="button" id="performHighlight" onclick="performHighlight()" disabled>Search</button>
                         </span>
                         <span class="input-group-btn mx-1 my-1">
-                          <button class="btn btn-secondary" type="button" onclick="resetHighlight()">Reset</button>
+                          <button class="btn btn-secondary" type="button" id="resetHighlight" onclick="resetHighlight()" disabled>Reset</button>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <input type="text" class="form-control" id="replaceWord" placeholder="Replace with..." disabled>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="input-group">
+                        <span class="input-group-btn mx-1 my-1">
+                          <button class="btn btn-secondary" type="button" id="replaceHighlight" onclick="replaceHighlight()" disabled>Replace all</button>
+                        </span>
+                        <span class="input-group-btn mx-1 my-1">
+                          <button class="btn btn-secondary" type="button" id="resetReplace" onclick="resetReplace()" disabled>Reset replace</button>
                         </span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="card-footer" id="searchStat">
+                  <span id="searchStatSearch"><strong id="searchStatSearchWord"></strong></span><br>
+                  <span id="searchStatFound"></span><br>
+                  <span id="searchStatReplace"><strong id="searchStatReplaceWord"></strong></span>
+                </div>
+              </div>
+              <!-- Save file widget-->
+              <div class="card my-4">
+                <h5 class="card-header">Save as file</h5>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <input type="text" class="form-control" id="fileNameSave" placeholder="File name to save as..." disabled>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="input-group">
+                        <span class="input-group-btn mx-1 my-1">
+                          <button class="btn btn-secondary" type="button" id="saveFile" onclick="saveFile()" disabled>Save</button>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <!-- Most used words widget-->
