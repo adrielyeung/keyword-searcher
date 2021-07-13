@@ -25,7 +25,7 @@ The front end, ```index.html```, is divided into several sections:
 4. Save file area - Save all text in Content area (including replaced keywords) as .txt file.
 5. Analysis area - Analysis of most used, least used words, character and word counts (see below).
 
-<img src="https://github.com/adrielyeung/keyword-searcher/blob/main/images/KeywordSearcher_Bottom_Img.PNG" alt="Keyword Searcher Front End Bottom" width="100%" height="100%">
+<img src="https://github.com/adrielyeung/keyword-searcher/blob/main/images/KeywordSearcher_Bottom_Img.PNG" alt="Keyword Searcher Front End Bottom" width="50%" height="50%">
 
 6. Sample area - Select any example text for quick study of functionalities.
 7. Insert text area - Custom text analysis as input by user.
