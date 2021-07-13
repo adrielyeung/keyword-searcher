@@ -364,9 +364,9 @@ function performHighlight() {
         // Count number of highlighted
         count = document.querySelectorAll("mark").length;
         document.getElementById("searchStatSearch").innerHTML = "Search for : " + 
-            "<strong id=\"searchStatSearchWord\">" + keyword + "</strong>";
+            "<strong id=\"searchStatSearchWord\">" + keyword + "</strong><br>";
         document.getElementById("searchStatFound").innerHTML = "Found matches : "
-            + count + " time(s)";
+            + count + " time(s)<br>";
 
         // Scroll to first match, and enable replace if there are matches
         if (count > 0) {
